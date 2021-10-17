@@ -1,16 +1,12 @@
-"""Support for Switchbot_Old_Hacs."""
-import logging
-from typing import Any, Dict
-
+"""Support for Switchbot Press Switch."""
+from __future__ import annotations
+from typing import Any
 import switchbot
 import voluptuous as vol
-from homeassistant.components.switch import PLATFORM_SCHEMA, SwitchDevice
+from homeassistant.components.switch import PLATFORM_SCHEMA, SwitchEntity
 from homeassistant.const import CONF_MAC, CONF_NAME, CONF_PASSWORD
-
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.restore_state import RestoreEntity
-
-_LOGGER = logging.getLogger(__name__)
 
 DEFAULT_NAME = "Switchbot_Old_Hacs"
 
@@ -27,10 +23,11 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     name = config.get(CONF_NAME)
     mac_addr = config[CONF_MAC]
     password = config.get(CONF_PASSWORD)
-    add_entities([SwitchBot_Old(mac_addr, name, password)])
+    add_entities([SwitchBot(mac_addr, name, password)])
 
 
-class SwitchBot_Old(SwitchDevice, RestoreEntity):
+class SwitchBot(SwitchEntity, RestoreEntity):
+
     def __init__(self, mac, name, password) -> None:
         self._state = None
         self._last_run_success = None
@@ -76,5 +73,5 @@ class SwitchBot_Old(SwitchDevice, RestoreEntity):
         return self._name
 
     @property
-    def device_state_attributes(self) -> Dict[str, Any]:
+    def extra_state_attributes(self) -> dict[str, Any]:
         return {"last_run_success": self._last_run_success}
