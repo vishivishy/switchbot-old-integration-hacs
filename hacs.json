@@ -1,0 +1,5 @@
+{
+  "name": "Switchbot_Old_Hacs",
+  "render_readme": true,
+  "domains": ["switch"]
+}
