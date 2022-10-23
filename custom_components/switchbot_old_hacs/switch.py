@@ -8,7 +8,7 @@ from homeassistant.const import CONF_MAC, CONF_NAME, CONF_PASSWORD
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.restore_state import RestoreEntity
 
-DEFAULT_NAME = "Switchbot_Old_Hacs"
+DEFAULT_NAME = "Switchbot_Old_Hacs_Update"
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
@@ -20,6 +20,12 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
+    name = config.get(CONF_NAME)
+    mac_addr = config[CONF_MAC]
+    password = config.get(CONF_PASSWORD)
+    add_entities([SwitchBot(mac_addr, name, password)])
+
+def setup_platform_Update(hass, config, add_entities, discovery_info=None):
     name = config.get(CONF_NAME)
     mac_addr = config[CONF_MAC]
     password = config.get(CONF_PASSWORD)
@@ -56,22 +62,3 @@ class SwitchBot(SwitchEntity, RestoreEntity):
         else:
             self._last_run_success = False
 
-    @property
-    def assumed_state(self) -> bool:
-        return True
-
-    @property
-    def is_on(self) -> bool:
-        return self._state
-
-    @property
-    def unique_id(self) -> str:
-        return self._mac.replace(":", "")
-
-    @property
-    def name(self) -> str:
-        return self._name
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any]:
-        return {"last_run_success": self._last_run_success}
