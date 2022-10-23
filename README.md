@@ -10,3 +10,5 @@ switch:
     mac: 'DD:BB:33:22:11:44'
     password: device_password
 ```
+
+Trying new lib in place of depricated libs
