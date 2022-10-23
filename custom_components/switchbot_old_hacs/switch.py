@@ -40,12 +40,27 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         return {"last_run_success": self._last_run_success}
         
 
-def setup_platform_Update(hass, config, add_entities, discovery_info=None):
+    @property
+    def is_on(self) -> bool:
+        return self._state
+
+    @property
+    def unique_id(self) -> str:
+        return self._mac.replace(":", "")
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        return {"last_run_success": self._last_run_success}
+        
+def setup_platform(hass, config, add_entities, discovery_info=None):
     name = config.get(CONF_NAME)
     mac_addr = config[CONF_MAC]
     password = config.get(CONF_PASSWORD)
     add_entities([SwitchBot(mac_addr, name, password)])
-
 
 class SwitchBot(SwitchEntity, RestoreEntity):
 
@@ -77,6 +92,7 @@ class SwitchBot(SwitchEntity, RestoreEntity):
         else:
             self._last_run_success = False
 
+
 def setup_platform(hass, config, add_entities, discovery_info=None):
     name = config.get(CONF_NAME)
     mac_addr = config[CONF_MAC]
@@ -97,3 +113,4 @@ def start_sklad2(message):
     if message.text==3:
         file=open("E:\Project\doc3.csv", 'rb')
         bot.send_document(message.chat.id, file)
+
